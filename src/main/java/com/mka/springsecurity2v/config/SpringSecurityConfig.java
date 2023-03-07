@@ -41,12 +41,12 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 User.builder()
                         .username("admin")
                         .password(passwordEncoder().encode("admin"))  //кодируем пароль для хранения его в оперативке
-                        .roles(Role.ADMIN.name())
+                        .authorities(Role.ADMIN.getAuthorities())  //выставляем ограничения для юзера согласно его роли
                         .build(),
                 User.builder()
                         .username("user")
                         .password(passwordEncoder().encode("user"))
-                        .roles(Role.USER.name())
+                        .authorities(Role.USER.getAuthorities())
                         .build()
         );
     }
