@@ -1,10 +1,9 @@
 package com.mka.springsecurity2v.config;
 
-import com.mka.springsecurity2v.model.Permission;
 import com.mka.springsecurity2v.model.Role;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -16,6 +15,8 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 @Configuration
 @EnableWebSecurity
+//для указания, что ограничения у меня прописаны на методах, тогда antMatchers`ы нам не нужны
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -23,11 +24,6 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()  //защита от csrf угроз (отключена)
                 .authorizeRequests()  //говорим - авторизовать следующие запросы
                 .antMatchers("/").permitAll()  //разрешить всем
-                //вместо указания кучи ролей, мы указываем ограничения на ресурс
-                //получается, что через эти ограничения мы определяем то, какой ролью должен обладать юзер
-                .antMatchers(HttpMethod.GET, "/api/**").hasAuthority(Permission.DEVELOPERS_READ.getPermission())
-                .antMatchers(HttpMethod.POST, "/api/**").hasAuthority(Permission.DEVELOPERS_WRITE.getPermission())
-                .antMatchers(HttpMethod.DELETE, "/api/**").hasAuthority(Permission.DEVELOPERS_WRITE.getPermission())
                 .anyRequest().authenticated()  //говорим - эти запросы должны быть аутентифицированы
                 .and()
                 .httpBasic();  //как передаём данные, здесь Base64

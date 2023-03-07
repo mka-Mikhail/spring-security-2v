@@ -1,6 +1,7 @@
 package com.mka.springsecurity2v.rest;
 
 import com.mka.springsecurity2v.model.Developer;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,17 +23,20 @@ public class DeveloperRestController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('developers:read')")
     public Developer getById(@PathVariable Long id) {
         return developers.stream().filter(developer -> developer.getId().equals(id)).findFirst().orElse(null);
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('developers:write')")
     public Developer create(@RequestBody Developer developer) {
         this.developers.add(developer);
         return developer;
     }
 
     @DeleteMapping("/delete/{id}")
+    @PreAuthorize("hasAuthority('developers:write')")
     public void deleteById(@PathVariable Long id){
         this.developers.removeIf(developer -> developer.getId().equals(id));
     }
