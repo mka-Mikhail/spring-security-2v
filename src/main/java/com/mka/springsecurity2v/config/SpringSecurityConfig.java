@@ -26,7 +26,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/").permitAll()  //разрешить всем
                 .anyRequest().authenticated()  //говорим - эти запросы должны быть аутентифицированы
                 .and()
-                .httpBasic();  //как передаём данные, здесь Base64
+                .formLogin();
     }
 
     //создаём сервис для хранения пользователей (который здесь и создаём) в оперативной памяти без БД
