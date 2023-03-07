@@ -38,7 +38,12 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 User.builder()
                         .username("admin")
                         .password(passwordEncoder().encode("admin"))  //кодируем пароль для хранения его в оперативке
-                        .roles("ADMIN")
+                        .roles(Role.ADMIN.name())
+                        .build(),
+                User.builder()
+                        .username("user")
+                        .password(passwordEncoder().encode("admin"))
+                        .roles(Role.USER.name())
                         .build()
         );
     }
