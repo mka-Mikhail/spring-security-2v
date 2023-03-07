@@ -1,5 +1,6 @@
 package com.mka.springsecurity2v.config;
 
+import com.mka.springsecurity2v.model.Permission;
 import com.mka.springsecurity2v.model.Role;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,9 +23,11 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()  //защита от csrf угроз (отключена)
                 .authorizeRequests()  //говорим - авторизовать следующие запросы
                 .antMatchers("/").permitAll()  //разрешить всем
-                .antMatchers(HttpMethod.GET, "/api/**").hasAnyRole(Role.ADMIN.name(), Role.USER.name())
-                .antMatchers(HttpMethod.POST, "/api/**").hasRole(Role.ADMIN.name())
-                .antMatchers(HttpMethod.DELETE, "/api/**").hasRole(Role.ADMIN.name())
+                //вместо указания кучи ролей, мы указываем ограничения на ресурс
+                //получается, что через эти ограничения мы определяем то, какой ролью должен обладать юзер
+                .antMatchers(HttpMethod.GET, "/api/**").hasAuthority(Permission.DEVELOPERS_READ.getPermission())
+                .antMatchers(HttpMethod.POST, "/api/**").hasAuthority(Permission.DEVELOPERS_WRITE.getPermission())
+                .antMatchers(HttpMethod.DELETE, "/api/**").hasAuthority(Permission.DEVELOPERS_WRITE.getPermission())
                 .anyRequest().authenticated()  //говорим - эти запросы должны быть аутентифицированы
                 .and()
                 .httpBasic();  //как передаём данные, здесь Base64
@@ -38,12 +41,12 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 User.builder()
                         .username("admin")
                         .password(passwordEncoder().encode("admin"))  //кодируем пароль для хранения его в оперативке
-                        .roles(Role.ADMIN.name())
+                        .authorities(Role.ADMIN.getAuthorities())  //выставляем ограничения для юзера согласно его роли
                         .build(),
                 User.builder()
                         .username("user")
                         .password(passwordEncoder().encode("user"))
-                        .roles(Role.USER.name())
+                        .authorities(Role.USER.getAuthorities())
                         .build()
         );
     }
