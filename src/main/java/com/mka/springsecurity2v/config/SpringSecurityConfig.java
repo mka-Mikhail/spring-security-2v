@@ -26,7 +26,9 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/").permitAll()  //разрешить всем
                 .anyRequest().authenticated()  //говорим - эти запросы должны быть аутентифицированы
                 .and()
-                .formLogin();
+                .formLogin()
+                .loginPage("/auth/login").permitAll()  //страница для входа доступная для всех
+                .defaultSuccessUrl("/auth/success");  //страница по умолчанию после входа
     }
 
     //создаём сервис для хранения пользователей (который здесь и создаём) в оперативной памяти без БД
