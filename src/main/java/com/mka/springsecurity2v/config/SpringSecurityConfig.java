@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -28,7 +29,14 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .formLogin()
                 .loginPage("/auth/login").permitAll()  //страница для входа доступная для всех
-                .defaultSuccessUrl("/auth/success");  //страница по умолчанию после входа
+                .defaultSuccessUrl("/auth/success")  //страница по умолчанию после входа
+                .and()
+                .logout()  //настроить выход
+                .logoutRequestMatcher(new AntPathRequestMatcher("/auth/logout", "POST"))  //адрес и метод для выхода
+                .invalidateHttpSession(true)  //инвалидируем сессию
+                .clearAuthentication(true)  //очищаем аутентификацию
+                .deleteCookies("JSESSIONID")  //удаляем JSESSIONID
+                .logoutSuccessUrl("/auth/login");  //куда переходить при выходе
     }
 
     //создаём сервис для хранения пользователей (который здесь и создаём) в оперативной памяти без БД
