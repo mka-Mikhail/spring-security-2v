@@ -42,7 +42,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                         .build(),
                 User.builder()
                         .username("user")
-                        .password(passwordEncoder().encode("admin"))
+                        .password(passwordEncoder().encode("user"))
                         .roles(Role.USER.name())
                         .build()
         );
