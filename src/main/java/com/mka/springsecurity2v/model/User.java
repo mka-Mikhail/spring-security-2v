@@ -2,7 +2,7 @@ package com.mka.springsecurity2v.model;
 
 import lombok.Data;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "users")
