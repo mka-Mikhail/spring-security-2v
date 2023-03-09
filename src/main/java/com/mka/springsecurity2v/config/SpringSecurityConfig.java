@@ -36,6 +36,7 @@ public class SpringSecurityConfig {
                 .authorizeHttpRequests()  //говорим - авторизовать следующие запросы
                 .requestMatchers("/").permitAll()  //разрешить всем
                 .requestMatchers("/api/v1/auth/login").permitAll()
+                .requestMatchers("/api/v1/registration").permitAll()
                 .anyRequest().authenticated()  //говорим - эти запросы должны быть аутентифицированы
                 .and()
                 .apply(jwtConfigurer);  //используем настроенную фильтрацию
